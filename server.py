@@ -1,26 +1,15 @@
 import cherrypy
-import os.path
-from os import remove
-import atexit
 
 #
 from graph import Graph
-
-
-def exit_handler():
-    if os.path.isfile("./static/fonction.png"):
-        remove("./static/fonction.png")
-
-
-atexit.register(exit_handler)
 
 
 conf = {
     "global": {
         "server.socket_host": "127.0.0.1",
         "server.socket_port": 8080,
-        "tools.staticdir.on": True,
-        "tools.staticdir.dir": os.path.dirname(os.path.abspath(__file__)) + "/static",
+        # "tools.staticdir.on": True,
+        # "tools.staticdir.dir": os.path.dirname(os.path.abspath(__file__)) + "/static",
     }
 }
 
@@ -56,7 +45,7 @@ class Site:
   <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." required/>
     <input type="submit" value="Valider"/>
     </form>
-    <svg width="600px" height="500px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
+    <svg width="600px" height="600px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
     <div style="position:absolute; bottom:0; right:5px; color: grey;">PyWebGraph | Copyright Daniel Falkov 2024, tous droits réservés.</div>
     <script>{script}</script>
     </body>
