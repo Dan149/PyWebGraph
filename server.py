@@ -34,16 +34,17 @@ class Site:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PyWebGraph - Tracé de courbe</title>
-  <link rel="stylesheet" href="style.css"/>
 </head>
   """
 
-    def index(self, fonction=None):
-        if fonction != None:
-            g = Graph(fonction)
-            if g.sympy_module_error:
-                script = "alert(\"La bibliothèque Sympy est une dépendence du Serveur PyWebGraph, veuillez l'installer avec 'python3 -m pip install sympy'.\")"
-            g.create_graph()
+    def index(self, fonction="0"):
+        script = ""
+        svg_content = ""
+        g = Graph(fonction)
+        if len(g.module_errors) != 0:
+            script = f"alert(\"Des dépendances de Serveur PyWebGraph ne sont pas satisfaites, veuillez installer les bibliothèques: {' '.join(g.module_errors)}. Utilisez la commande: 'python3 -m pip install {' '.join(g.module_errors)}'.\")"
+        else:
+            svg_content = g.create_graph()
         return f"""
   {self.head}
   <body>
@@ -55,7 +56,8 @@ class Site:
   <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." required/>
     <input type="submit" value="Valider"/>
     </form>
-    <img src="fonction.png" style="width:50%; display:block; margin:0 auto;"/>
+    <svg width="600px" height="500px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
+    <div style="position:absolute; bottom:0; right:5px; color: grey;">PyWebGraph | Copyright Daniel Falkov 2024, tous droits réservés.</div>
     <script>{script}</script>
     </body>
     </html>"""
