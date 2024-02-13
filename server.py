@@ -26,10 +26,10 @@ class Site:
 </head>
   """
 
-    def index(self, fonction="0"):
+    def index(self, fonction="0", xmin=-5, xmax=5):
         script = ""
         svg_content = ""
-        g = Graph(fonction)
+        g = Graph(fonction, xmin, xmax)
         if len(g.module_errors) != 0:
             script = f"alert(\"Des dépendances de Serveur PyWebGraph ne sont pas satisfaites, veuillez installer les bibliothèques: {' '.join(g.module_errors)}. Utilisez la commande: 'python3 -m pip install {' '.join(g.module_errors)}'.\")"
         else:
@@ -43,6 +43,10 @@ class Site:
   <form action="index" method="get>
   <label for="fonction">Fonction mathématique:</label>
   <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." required/>
+  <label for="xmin">Xmin</label>
+  <input type="number" width="20px" value="-5" name="xmin" required/>
+    <label for="xmax">Xmax</label>
+  <input type="number" width="20px" value="5" name="xmax" required/>
     <input type="submit" value="Valider"/>
     </form>
     <svg width="600px" height="600px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
