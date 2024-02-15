@@ -35,11 +35,11 @@ class Graph:  # svg 600x600
         (self.x_interval, self.x_interval_step) = linspace(
             self.xmin, self.xmax, 10, retstep=True
         )
-        self.x_interval.tolist()
+        self.x_interval = self.x_interval.tolist()
         for x in range(len(self.x_interval)):
-            self.x_interval[x] = ceil(int(self.x_interval[x]))
+            self.x_interval[x] = int(ceil(self.x_interval[x]))
         self.x_interval_step = int(self.x_interval_step)
-        self.x_values = linspace(self.xmin, self.xmax, xmax * 100).tolist()
+        self.x_values = linspace(self.xmin, self.xmax, self.xmax * 100).tolist()
         self.y_images = []  # liste images de y
         self.svg_content_list = []  # liste des attributs svg
         self.parsed_equation = "0"
@@ -110,8 +110,14 @@ class Graph:  # svg 600x600
                 )
             y -= self.x_interval_step
             x += self.x_interval_step
+            if self.x_interval.index(min(self.x_interval, key=abs)) == 0:
+                spacing = 50
+            else:
+                spacing = 100
+        xtranslation = spacing + (
+            self.x_interval.index(min(self.x_interval, key=abs)) * 50
+        )
         for i in range(len(self.x_values) - 1):
-            xtranslation = 300
             ytranslation = 300
             if self.y_images[i] != None:
                 if (

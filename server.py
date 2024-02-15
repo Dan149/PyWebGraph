@@ -42,11 +42,11 @@ class Site:
   <li> La fonction ne doit présenter qu'une inconnue, nommée x.</li><li> Les fonctions trigonométriques sont acceptés dans l'expression sous forme: cos(nombre), etc... </li><li> La racine carrée est également utilisable avec sqrt(nombre).</li></ul>
   <form action="index" method="get>
   <label for="fonction">Fonction mathématique:</label>
-  <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." required/>
+  <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." value={fonction} required/>
   <label for="xmin">Xmin</label>
-  <input type="number" width="20px" value="-5" name="xmin" required/>
+  <input type="number" width="20px" value="{xmin}" name="xmin" min="-5000" max="4995" required/>
     <label for="xmax">Xmax</label>
-  <input type="number" width="20px" value="5" name="xmax" required/>
+  <input type="number" width="20px" value="{xmax}" name="xmax" min="-4995" max="5000" required/>
     <input type="submit" value="Valider"/>
     </form>
     <svg width="600px" height="600px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
