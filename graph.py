@@ -97,10 +97,7 @@ class Graph:  # svg 600x600
         self.svg_content_list.append(
             "<rect x='50' y='50' height='500' width='500' fill-opacity='10%' stroke='black' style='z-index:-1;'/>"
         )
-        if self.xmax + self.xmin == 0:
-            self.svg_content_list.append(
-                f"<line x1='300' x2='300' y1='50' y2='550' stroke='black'/>"
-            )
+
         y = self.x_interval_step * 5
         x = self.xmin
         for i in range(11):

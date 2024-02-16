@@ -41,7 +41,7 @@ class Site:
   <h3>Notice:</h3> <ul>
   <li> La fonction ne doit présenter qu'une inconnue, nommée x.</li>
   <li>De manière générale, toute propriété de la bibliothèque python "math" est utilisable (ex: sqrt(), sin(), cos(), tan(), pi).</li>
-  <li>L'intervalle inclusive minimale est 10 (établi par défaut entre -5 et 5).</li>
+  <li>L'intervalle inclusif minimal est 10 (établi par défaut entre -5 et 5).</li>
   </ul>
   <form action="index" method="get>
   <label for="fonction">Fonction mathématique:</label>
