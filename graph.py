@@ -32,18 +32,24 @@ class Graph:  # svg 600x600
             self.xmin = -5
             self.xmax = 5
 
-        (self.x_interval, self.x_interval_step) = linspace(
-            self.xmin, self.xmax, 10, retstep=True
-        )
-        self.x_interval = self.x_interval.tolist()
-        for x in range(len(self.x_interval)):
-            self.x_interval[x] = int(ceil(self.x_interval[x]))
-        self.x_interval_step = int(self.x_interval_step)
+        if (self.xmax - self.xmin) % 10 == 0:
+            self.x_interval = []
+            self.x_interval_step = int((self.xmax - self.xmin) / 10)
+            for x in range(int(self.xmin), int(self.xmax + 1), self.x_interval_step):
+                self.x_interval.append(x)
+        else:
+            (self.x_interval, self.x_interval_step) = linspace(
+                self.xmin, self.xmax, 10, retstep=True
+            )
+            self.x_interval = self.x_interval.tolist()
+            for x in range(len(self.x_interval)):
+                self.x_interval[x] = int(ceil(self.x_interval[x]))
+            self.x_interval_step = int(self.x_interval_step)
         self.x_values = linspace(self.xmin, self.xmax, self.xmax * 100).tolist()
         self.y_images = []  # liste images de y
         self.svg_content_list = []  # liste des attributs svg
         self.parsed_equation = "0"
-        self.displayed_equation = (
+        self.processed_equation = (
             "0"  # Equation prise en compte pour la génération des images
         )
         if len(self.module_errors) == 0:
@@ -58,24 +64,28 @@ class Graph:  # svg 600x600
                 self.parsed_equation = "none"
             # Mise à l'echelle pour affichage:
             if "x" not in self.parsed_equation:
-                self.displayed_equation = str(self.parsed_equation + "*0.5")
+                self.processed_equation = str(self.parsed_equation + "*0.5")
             elif (
                 len(self.parsed_equation.split("+")) > 1
                 or len(self.parsed_equation.split("-")) > 1
             ):
+                self.processed_equation = self.parsed_equation
                 if "x" not in self.parsed_equation.split("+")[-1]:
-                    self.displayed_equation = str(self.parsed_equation + "*0.5")
+                    self.processed_equation = str(self.parsed_equation + "*0.5")
                 elif "x" not in self.parsed_equation.split("-")[-1]:
-                    self.displayed_equation = str(self.parsed_equation + "*0.5")
-                else:
-                    self.displayed_equation = self.parsed_equation
+                    self.processed_equation = str(self.parsed_equation + "*0.5")
+
+                if "x" not in self.parsed_equation.split("+")[0]:
+                    self.processed_equation = str("0.5*" + self.parsed_equation)
+                elif "x" not in self.parsed_equation.split("-")[0]:
+                    self.processed_equation = str("0.5*" + self.parsed_equation)
             else:
-                self.displayed_equation = self.parsed_equation
+                self.processed_equation = self.parsed_equation
 
     def generate_y_images(self) -> None:  # définit les valeurs de y
         for x in self.x_values:
             try:
-                self.y_images.append(eval(self.displayed_equation))
+                self.y_images.append(eval(self.processed_equation))
             except:  # pour les solutions nulles
                 self.y_images.append(None)
 
@@ -113,36 +123,40 @@ class Graph:  # svg 600x600
             if self.x_interval.index(min(self.x_interval, key=abs)) == 0:
                 spacing = 50
             else:
-                spacing = 100
+                if (self.xmax - self.xmin) % 10 == 0:
+                    spacing = 50
+                else:
+                    spacing = 100
         xtranslation = spacing + (
             self.x_interval.index(min(self.x_interval, key=abs)) * 50
         )
+        ytranslation = 300
+        scale = 1000 / (self.xmax - self.xmin)
         for i in range(len(self.x_values) - 1):
-            ytranslation = 300
             if self.y_images[i] != None:
                 if (
-                    550 >= self.x_values[i] * 100 + xtranslation
-                    and 50 <= self.x_values[i] * 100 + xtranslation
-                    and 550 >= ytranslation + (-(self.y_images[i] * 100))
-                    and 50 <= ytranslation + (-(self.y_images[i] * 100))
+                    550 >= self.x_values[i] * scale + xtranslation
+                    and 50 <= self.x_values[i] * scale + xtranslation
+                    and 550 >= ytranslation + (-(self.y_images[i] * scale))
+                    and 50 <= ytranslation + (-(self.y_images[i] * scale))
                 ):
                     if self.y_images[i] == None or self.y_images[i + 1] == None:
                         pass
-                    elif 550 < self.x_values[i + 1] * 100 + 300:
+                    elif 550 < self.x_values[i + 1] * scale + xtranslation:
                         self.svg_content_list.append(
-                            f"<line x1='{self.x_values[i]*100+xtranslation}' x2='550' y1='{ytranslation+(-(self.y_images[i]*100))}' y2='{ytranslation+(-(self.y_images[i]*100))}' stroke='red'/>"
+                            f"<line x1='{self.x_values[i]*scale+xtranslation}' x2='550' y1='{ytranslation+(-(self.y_images[i]*scale))}' y2='{ytranslation+(-(self.y_images[i]*scale))}' stroke='red'/>"
                         )
-                    elif 550 < 300 + (-(self.y_images[i + 1] * 100)):
+                    elif 550 < ytranslation + (-(self.y_images[i + 1] * scale)):
                         self.svg_content_list.append(
-                            f"<line x1='{self.x_values[i]*100+xtranslation}' x2='{self.x_values[i]*100+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*100))}' y2='550' stroke='red'/>"
+                            f"<line x1='{self.x_values[i]*scale+xtranslation}' x2='{self.x_values[i]*scale+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*scale))}' y2='550' stroke='red'/>"
                         )
-                    elif 50 > 300 + (-(self.y_images[i + 1] * 100)):
+                    elif 50 > ytranslation + (-(self.y_images[i + 1] * scale)):
                         self.svg_content_list.append(
-                            f"<line x1='{self.x_values[i]*100+xtranslation}' x2='{self.x_values[i+1]*100+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*100))}' y2='50' stroke='red'/>"
+                            f"<line x1='{self.x_values[i]*scale+xtranslation}' x2='{self.x_values[i+1]*scale+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*scale))}' y2='50' stroke='red'/>"
                         )
                     else:
                         self.svg_content_list.append(
-                            f"<line x1='{self.x_values[i]*100+xtranslation}' x2='{self.x_values[i+1]*100+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*100))}' y2='{ytranslation+(-(self.y_images[i+1]*100))}' stroke='red'/>"
+                            f"<line x1='{self.x_values[i]*scale+xtranslation}' x2='{self.x_values[i+1]*scale+xtranslation}' y1='{ytranslation+(-(self.y_images[i]*scale))}' y2='{ytranslation+(-(self.y_images[i+1]*scale))}' stroke='red'/>"
                         )
 
         return " ".join(self.svg_content_list)

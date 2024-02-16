@@ -39,7 +39,10 @@ class Site:
   <body>
   <h1> Tracé de courbe </h1>
   <h3>Notice:</h3> <ul>
-  <li> La fonction ne doit présenter qu'une inconnue, nommée x.</li><li> Les fonctions trigonométriques sont acceptés dans l'expression sous forme: cos(nombre), etc... </li><li> La racine carrée est également utilisable avec sqrt(nombre).</li></ul>
+  <li> La fonction ne doit présenter qu'une inconnue, nommée x.</li>
+  <li>De manière générale, toute propriété de la bibliothèque python "math" est utilisable (ex: sqrt(), sin(), cos(), tan(), pi).</li>
+  <li>L'intervalle inclusive minimale est 10 (établi par défaut entre -5 et 5).</li>
+  </ul>
   <form action="index" method="get>
   <label for="fonction">Fonction mathématique:</label>
   <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." value={fonction} required/>
