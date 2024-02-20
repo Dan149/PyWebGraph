@@ -1,4 +1,5 @@
 import cherrypy
+import os.path
 
 #
 from graph import Graph
@@ -8,8 +9,8 @@ conf = {
     "global": {
         "server.socket_host": "127.0.0.1",
         "server.socket_port": 8080,
-        # "tools.staticdir.on": True,
-        # "tools.staticdir.dir": os.path.dirname(os.path.abspath(__file__)) + "/static",
+        "tools.staticdir.on": True,
+        "tools.staticdir.dir": os.path.dirname(os.path.abspath(__file__)) + "/static",
     }
 }
 
@@ -26,7 +27,7 @@ class Site:
 </head>
   """
 
-    def index(self, fonction="0", xmin=-5, xmax=5):
+    def index(self, fonction="0", xmin=-5, xmax=5, stepCheckbox=None):
         script = ""
         svg_content = ""
         g = Graph(fonction, xmin, xmax)
@@ -46,15 +47,18 @@ class Site:
   <form action="index" method="get>
   <label for="fonction">Fonction mathématique:</label>
   <input type="text" name="fonction" placeholder="Entrer une fonction mathématique..." value={fonction} required/>
+  <label for="stepCheckbox">Arrondir les axes et l'intervalle:</label>
+  <input type="checkbox" name="stepCheckbox" id="step-checkbox"/>
   <label for="xmin">Xmin</label>
-  <input type="number" width="20px" value="{xmin}" name="xmin" min="-5000" max="4995" required/>
+  <input type="number" width="20px" value="{xmin}" name="xmin" min="-5000" max="4995" id="xmin-input" step="1" required/>
     <label for="xmax">Xmax</label>
-  <input type="number" width="20px" value="{xmax}" name="xmax" min="-4995" max="5000" required/>
+  <input type="number" width="20px" value="{xmax}" name="xmax" min="-4995" max="5000" id="xmax-input" step="1" required/>
     <input type="submit" value="Valider"/>
     </form>
-    <svg width="600px" height="600px" style="display:block; margin:80px auto 0 auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
-    <div style="position:absolute; bottom:0; right:5px; color: grey;">PyWebGraph | Copyright Daniel Falkov 2024, tous droits réservés.</div>
+    <svg width="600px" height="600px" style="display:block; margin:80px auto; border:1px solid black; border-radius: 20px;">{svg_content}</svg>
+    <div style="position:fixed; bottom:0; right:5px; color: grey;">PyWebGraph | Copyright Daniel Falkov 2024, tous droits réservés.</div>
     <script>{script}</script>
+    <script src="./script.js" type="text/javascript"></script>
     </body>
     </html>"""
 

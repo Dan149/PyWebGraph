@@ -31,7 +31,6 @@ class Graph:  # svg 600x600
         except:
             self.xmin = -5
             self.xmax = 5
-
         if (self.xmax - self.xmin) % 10 == 0:
             self.x_interval = []
             self.x_interval_step = int((self.xmax - self.xmin) / 10)
@@ -41,10 +40,12 @@ class Graph:  # svg 600x600
             (self.x_interval, self.x_interval_step) = linspace(
                 self.xmin, self.xmax, 10, retstep=True
             )
+            print(self.x_interval)
+            print(self.x_interval_step)
             self.x_interval = self.x_interval.tolist()
             for x in range(len(self.x_interval)):
-                self.x_interval[x] = int(ceil(self.x_interval[x]))
-            self.x_interval_step = int(self.x_interval_step)
+                self.x_interval[x] = self.x_interval[x]
+            self.x_interval_step = self.x_interval_step
         self.x_values = linspace(self.xmin, self.xmax, self.xmax * 100).tolist()
         self.y_images = []  # liste images de y
         self.svg_content_list = []  # liste des attributs svg
@@ -102,10 +103,10 @@ class Graph:  # svg 600x600
         x = self.xmin
         for i in range(11):
             self.svg_content_list.append(
-                f"<line x1='{i*50+50}' x2='{i*50+50}' y1='50' y2='550' stroke='rgba(0,0,0,0.2)' /> <text y='575px' x='{i*50+46}' font-size='16'>{x}</text>"
+                f"<line x1='{i*50+50}' x2='{i*50+50}' y1='50' y2='550' stroke='rgba(0,0,0,0.2)' /> <text y='575px' x='{i*50+46}' font-size='16'>{f'{x:.2f}'}</text>"
             )
             self.svg_content_list.append(
-                f"<line x1='50' x2='550' y1='{i*50+50}' y2='{i*50+50}' stroke='rgba(0,0,0,0.2)' /> <text y='{i*50+55}' x='25' font-size='16'>{y}</text>"
+                f"<line x1='50' x2='550' y1='{i*50+50}' y2='{i*50+50}' stroke='rgba(0,0,0,0.2)' /> <text y='{i*50+55}' x='25' font-size='16'>{f'{y:.2f}'}</text>"
             )
             if int(x) == 0:
                 self.svg_content_list.append(
